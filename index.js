@@ -2,7 +2,11 @@ import express from "express";
 import cors from "cors";
 const app = express();
 import notFound from "./src/middlewares/not-found.js";
-import mantenimiento from "./src/middlewares/mantenimiento.js";
+import mantenimiento, {
+    activarMantenimiento,
+    desactivarMantenimiento,
+    estado
+}from "./src/middlewares/mantenimiento.js";
 
 const products= [
     { id: 1, nombre: "Resistencia 220Ω", precio: 5, categoria: ["resistencia", "carbono"] },
@@ -17,20 +21,52 @@ const products= [
     { id: 10, nombre: "Interruptor táctil", precio: 7, categoria: ["interruptor", "momentáneo"] }
   ];
 
-app.use(mantenimiento);
+// Middleware de mantenimiento
+app.use(mantenimiento)
 
 app.get("/",(req,res)=>{
     res.json({'message':"Bienvenido a nuestra API REST"});
 });
 
-app.get('/products',(req,res)=>{
-    res.json(products);
+app.get('/products',(req,res) => {
+    const {categoria}=req.query
+    if (categoria){
+        const productFiltradros =products.filter(item => item.categoria.includes(categoria));
+       return res.json(productFiltradros);
+        
+    }
+     res.json(products);
+    
+    
 })
-app.get('/products/:id',(req,res)=>{
-    const {id}=parseInt(req.params.id);
-    const product=products.find((item)=>{})
-    res.json(req.params);
+app.get('/products/:id',(req,res) => {
+    const id = parseInt(req.params.id);
+    const product = products.find((item)=>item.id==id);
+
+    if(!product){
+        return res.status(404).json({error:"El producto no existe"});
+    }
+
+    return res.json(product);
 })
+
+
+
+app.get("/estado", (req, res) => {
+  res.json({ mantenimiento: estado.activo });
+});
+
+
+app.post("/activar-mantenimiento", (req, res) => {
+    activarMantenimiento();
+    res.json({ message: "Modo mantenimiento activado" });
+  });
+  
+  app.post("/desactivar-mantenimiento", (req, res) => {
+    desactivarMantenimiento();
+    res.json({ message: "Modo mantenimiento desactivado" });
+  });
+
 
 app.use(notFound);
 
