@@ -36,9 +36,71 @@ app.get('/products',(req,res) => {
         
     }
      res.json(products);
-    
-    
+  
 })
+
+// app.get("/products/search",(req,res)=>{
+//     const {nombre}=req.query;
+//     if(!nombre){
+//         return res.status(400).json({error:"el nombre es requerido"});
+//     }
+//     const productoNombre=products.filter(item=>
+//             item.nombre.toLowerCase().includes(nombre.toLowerCase()));
+    
+//     if (productoNombre.length===0){
+//         return res.status(404).json({error:"no existe el producto"});
+//     } 
+//      return res.json(productoNombre);
+       
+    
+
+// })
+app.get("/product/search", (req, res) => {
+    const { nombre, categoria, precioMin, precioMax, orden } = req.query;
+  
+    let resultado = products;
+  
+    if (nombre) {
+      resultado = resultado.filter(item =>
+        item.nombre.toLowerCase().includes(nombre.toLowerCase())
+      );
+    }
+  
+    if (categoria) {
+      resultado = resultado.filter(item =>
+        item.categoria.some(cat => cat.toLowerCase().includes(categoria.toLowerCase()))
+      );
+    }
+  
+    if (precioMin) {
+      const min = parseFloat(precioMin);
+      if (!isNaN(min)) {
+        resultado = resultado.filter(item => item.precio >= min);
+      }
+    }
+  
+    if (precioMax) {
+      const max = parseFloat(precioMax);
+      if (!isNaN(max)) {
+        resultado = resultado.filter(item => item.precio <= max);
+      }
+    }
+  
+    // 🧮 Ordenar por precio
+    if (orden === "asc") {
+      resultado.sort((a, b) => a.precio - b.precio);
+    } else if (orden === "desc") {
+      resultado.sort((a, b) => b.precio - a.precio);
+    }
+  
+    if (resultado.length === 0) {
+      return res.status(404).json({ error: "No se encontraron productos con los filtros aplicados" });
+    }
+  
+    return res.json(resultado);
+  });
+
+
 app.get('/products/:id',(req,res) => {
     const id = parseInt(req.params.id);
     const product = products.find((item)=>item.id==id);
