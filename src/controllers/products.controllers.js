@@ -2,9 +2,9 @@ import * as Model from "../models/Product.js";
 
 
 
-export const getAllProducts = (req,res) => {
+export const getAllProducts =async (req,res) => {
     const {categoria}=req.query
-    const products=Model.getAllProducts();
+    const products=await Model.getAllProducts();
 
     if (categoria){
         const productFiltradros =products.filter(item => item.categoria.includes(categoria));
@@ -14,9 +14,9 @@ export const getAllProducts = (req,res) => {
   
 }
 
-export const searchProducts =(req, res) => {
+export const searchProducts =async (req, res) => {
   const { nombre, categoria, precioMin, precioMax, orden, solo } = req.query;
-    const products=Model.getAllProducts();
+    const products=await Model.getAllProducts();
   let resultado = products;
 
   // 🔎 Filtrar por nombre
