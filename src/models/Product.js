@@ -13,25 +13,38 @@ const products= [
 
 import { db } from "./firebase.js";
 
-import {collection, getDocs } from "firebase/firestore";
+import {collection, getDocs,getDoc,addDoc,deleteDoc,doc } from "firebase/firestore";
 
 const productsCollection = collection(db,"products");
 
 
 
-export const getAllProducts=async()=>{
-  
-    try {
-      const snapshot =await getDocs(productsCollection);
-      return snapshot.docs.map((doc)=>({id:doc.id, ...doc.data()}));
-      
+export async function getAllProducts(){ 
+      try {
+      const querySnapshot =await getDocs(productsCollection);
+      const products=[];
+      querySnapshot.forEach((doc)=>{
+        products.push({id:doc.id,...doc.data()});
+      });
+      return products;
     } catch (error) {
       console.error(error);
       
     };
 }
 
-export const productsById=(id)=>{
-   return products.find((item)=>item.id==id);
-    
+//metodo para buscar un producto por su ID
+export async function productsById(id) {
+  try {
+    const productRef = doc(db, "products", id); // 👈 este es el fix
+    const snapshot = await getDoc(productRef);
+
+    return snapshot.exists()
+      ? { id: snapshot.id, ...snapshot.data() }
+      : null;
+
+  } catch (error) {
+    console.error("Error al obtener producto por ID:", error);
+    return null;
+  }
 }

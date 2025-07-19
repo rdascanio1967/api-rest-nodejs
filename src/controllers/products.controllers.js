@@ -4,7 +4,7 @@ import * as Model from "../models/Product.js";
 
 export const getAllProducts =async (req,res) => {
     const {categoria}=req.query
-    const products=await Model.getAllProducts();
+    const products =await Model.getAllProducts();
 
     if (categoria){
         const productFiltradros =products.filter(item => item.categoria.includes(categoria));
@@ -81,9 +81,9 @@ export const searchProducts =async (req, res) => {
   return res.json(resultado);
 }
 
-export const productsById=(req,res) => {
-    const id = parseInt(req.params.id);
-    const product = Model.productsById(id);
+export const productsById= async (req,res) => {
+    const id = req.params.id;
+    const product = await Model.productsById(id);
 
     if(!product){
         return res.status(404).json({error:"El producto no existe"});
@@ -91,3 +91,4 @@ export const productsById=(req,res) => {
 
     return res.json(product);
 }
+
