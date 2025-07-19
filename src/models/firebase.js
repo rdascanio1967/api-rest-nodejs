@@ -1,3 +1,4 @@
+import 'dotenv/config';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
@@ -6,19 +7,18 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBDPDFgJDtYGqKxlZO-kcQcmi81XiHvYY4",
-  authDomain: "api-rest-nodejs-ea239.firebaseapp.com",
-  projectId: "api-rest-nodejs-ea239",
-  storageBucket: "api-rest-nodejs-ea239.firebasestorage.app",
-  messagingSenderId: "463953755967",
-  appId: "1:463953755967:web:1677824c9201897b5add8a"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_APP_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_KEY,
+  appId: process.env.FIREBASE_APP_ID
+  
 };
-
+console.log("Firebase config:", firebaseConfig)
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 //inizialize Firebase
 const db = getFirestore(app);
 
 export { db };
-

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import notFound from "./src/middlewares/not-found.js";
@@ -26,5 +27,5 @@ app.use(notFound);
 
 
 
-const PORT =3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT,()=> console.log(`http://localhost:${PORT}`));
