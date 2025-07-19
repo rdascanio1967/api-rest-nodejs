@@ -13,7 +13,7 @@ const products= [
 
 import { db } from "./firebase.js";
 
-import {collection, getDocs,getDoc,addDoc,deleteDoc,doc } from "firebase/firestore";
+import {collection, getDocs, getDoc,addDoc,deleteDoc,doc } from "firebase/firestore";
 
 const productsCollection = collection(db,"products");
 
@@ -35,6 +35,7 @@ export async function getAllProducts(){
 
 //metodo para buscar un producto por su ID
 export async function productsById(id) {
+
   try {
     const productRef = doc(db, "products", id); // 👈 este es el fix
     const snapshot = await getDoc(productRef);
@@ -46,5 +47,18 @@ export async function productsById(id) {
   } catch (error) {
     console.error("Error al obtener producto por ID:", error);
     return null;
+  }
+}
+
+//metodo para añadir elementos a la colección
+
+export async function createProduct(data){
+
+  try {
+        const docRef = await addDoc(productsCollection,data);
+        return {id:docRef.id,...data};
+     
+  } catch (error) {
+    console.log(error)
   }
 }

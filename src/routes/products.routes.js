@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllProducts,
+import { createProduct, getAllProducts,
          productsById,
          searchProducts
  } from "../controllers/products.controllers.js";
@@ -12,6 +12,8 @@ router.get('/products',getAllProducts)
 router.get("/products/search", searchProducts);
 
 
-router.get('/products/:id',productsById)
+router.get('/products/:id',productsById);
+
+router.post('/products',createProduct);
 
 export default router;

@@ -92,3 +92,20 @@ export const productsById= async (req,res) => {
     return res.json(product);
 }
 
+export const createProduct = async (req, res) => {
+  try {
+    const { nombre, precio, categoria, descripcion } = req.body;
+
+    // Validación básica de campos requeridos
+    if (!nombre || precio === undefined || !Array.isArray(categoria) || !descripcion) {
+      return res.status(400).json({ error: "Faltan campos requeridos o están mal formateados" });
+    }
+
+    const newProduct = await Model.createProduct({ nombre, precio, categoria, descripcion });
+
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error("Error al crear producto:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
